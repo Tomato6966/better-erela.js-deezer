@@ -9,10 +9,6 @@ Original Repository: https://github.com/WearifulCupid0/erela.js-deezer/
 
 In combination with https://github.com/Tomato6966/erela.js this works like a charm and perfect especially when you consider, you'd use it with lavalink in combination!
 
-+ I added following method:
-
-SearchDeezer
-which can be used to search on deezer!
 
 
 <div align = "center">
