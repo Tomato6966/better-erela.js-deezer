@@ -10,6 +10,16 @@ Original Repository: https://github.com/WearifulCupid0/erela.js-deezer/
 In combination with https://github.com/Tomato6966/erela.js this works like a charm and perfect especially when you consider, you'd use it with lavalink in combination!
 
 
+## Added **Deezer Search**
+
+Example:
+
+```js 
+client.manager.search({
+   source: "deezer",
+   query: "eminem"
+});
+```
 
 <div align = "center">
 <a href="https://www.npmjs.com/package/erela.js-deezer">
