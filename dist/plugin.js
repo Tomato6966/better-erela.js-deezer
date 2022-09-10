@@ -72,7 +72,6 @@ class Deezer extends erela_js_1.Plugin {
             const finalQuery = query.query || query;
             if(typeof query === "object" && query.source && (this.querySource.includes(query.source))) {
                 const tracks = yield this.searchQuery(finalQuery)
-                console.log(tracks);
                 if(tracks && tracks.length) return buildSearch("TRACK_LOADED", tracks.map(query => {
                     const track = erela_js_1.TrackUtils.buildUnresolved(query, requester);
                     if (this.options.convertUnresolved) track.resolve();
