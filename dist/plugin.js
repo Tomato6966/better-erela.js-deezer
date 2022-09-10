@@ -56,6 +56,7 @@ class Deezer extends erela_js_1.Plugin {
             album: this.getAlbumTracks.bind(this),
             playlist: this.getPlaylistTracks.bind(this),
         };
+        this.querySource = options.querySource && Array.isArray(options.querySource) ? options.querySource : ["deezer", "dz"];
 
         Object.defineProperty(this, 'functions', { value: FUNCTIONS });
         Object.defineProperty(this, 'options', { value: Object.assign(defaultOptions, options) });
@@ -69,6 +70,15 @@ class Deezer extends erela_js_1.Plugin {
         var _a, _b, _c;
         return __awaiter(this, void 0, void 0, function* () {
             const finalQuery = query.query || query;
+            if(typeof query === "object" && query.source && (this.querySource.includes(query.source))) {
+                const tracks = yield this.searchQuery(finalQuery)
+                console.log(tracks);
+                if(tracks && tracks.length) return buildSearch("TRACK_LOADED", tracks.map(query => {
+                    const track = erela_js_1.TrackUtils.buildUnresolved(query, requester);
+                    if (this.options.convertUnresolved) track.resolve();
+                    return track;
+                }), null, null);
+            }
             const [, type, id] = (_a = finalQuery.match(REGEX)) !== null && _a !== void 0 ? _a : [];
             if (type in this.functions) {
                 try {
@@ -92,6 +102,14 @@ class Deezer extends erela_js_1.Plugin {
                 };
             };
             return this._search(query, requester);
+        });
+    };
+    searchQuery(query) {
+        return __awaiter(this, void 0, void 0, function* () { // https://api.deezer.com/search/track?q=eminem
+            const { data: response } = yield axios_1.default.get(`${BASE_URL}/search/track?q=${encodeURIComponent(query)}`).catch(() => { });
+            if(!response) return [];
+            const tracks = response?.data?.map?.(item => Deezer.convertToUnresolved(item));
+            return tracks || [];
         });
     };
     getAlbumTracks(id) {
@@ -122,7 +140,7 @@ class Deezer extends erela_js_1.Plugin {
         if (typeof track.title !== "string") throw new TypeError(`The track title must be a string, received type ${typeof track.name}`);
         return {
             identifier: track.id ? `${track.id}` : undefined,
-            uri: track.id ? `https://deezer.com/track/${track.id}` : undefined,
+            uri: track.link ?? track.id ? `https://deezer.com/track/${track.id}` : undefined,
             thumbnail: track.md5_image ? `https://e-cdn-images.dzcdn.net/images/cover/${track.md5_image}/264x264-000000-80-0-0.jpg` : undefined,
             preview: track.preview ? `${track.preview}` : undefined,
             author: track.artist ? `${track.artist.name}` : undefined,
