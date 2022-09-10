@@ -17,6 +17,8 @@ export interface DeezerOptions {
     playlistLimit?: number;
     /** Amount of pages to load, each page having 50 tracks. */
     albumLimit?: number;
+    /** The Query source string(s) it shall use to detect deezer searchings (default is: ["deezer", "dz"]) */
+    querySource?: string[];
     /**
      * Whether to convert UnresolvedTracks to Track. Defaults to false.
      * **Note: This is** ***not*** **recommended as it spams YouTube and takes a while if a large playlist is loaded.**
